@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medium Posts - Data Scientist Portfolio</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+
+<script>
+  fetch('/api/medium-posts')
+    .then(r => r.json())
+    .then(posts => {
+      const container = document.getElementById('medium-posts');
+      container.innerHTML = '';
+      posts.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl shadow-md p-6 flex flex-col justify-between';
+        card.innerHTML = `
+          <h3 class="font-bold text-xl mb-2">${post.title}</h3>
+          <p class="text-slate-500 mb-4">${post.excerpt || ''}</p>
+          <div class="text-slate-400 text-sm mb-4">Published: ${post.date}</div>
+          <a href="${post.link}" target="_blank" class="inline-block bg-orange-500 text-white font-bold px-6 py-2 rounded-full shadow hover:bg-orange-600 transition">Read on Medium</a>
+        `;
+        container.appendChild(card);
+      });
+    });
+  </script>
+
+
+<body class="bg-[#f8fafc] text-[#22223b] font-sans">
+  <!-- Navigation Pane -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm flex items-center justify-between px-8 py-3 mb-8">
+    <div class="flex items-center gap-3">
+      ${author.image ? `<img src="/${author.image}" alt="Author" class="w-12 h-12 rounded-full object-cover" />` : `<div class='w-12 h-12 flex items-center justify-center bg-gray-800 text-white text-xs rounded-full'>Add image here</div>`}
+      <span class="text-xl font-bold tracking-tight">Your Name</span>
+    </div>
+    <nav class="flex items-center gap-8 text-[#22223b] text-sm font-medium">
+      <a href="/public/index.html" class="hover:text-orange-500 transition">Main Page</a>
+      <a href="/public/projects.html" class="hover:text-orange-500 transition">Projects</a>
+      <a href="/public/medium.html" class="hover:text-orange-500 transition">Medium Posts</a>
+              <a href="http://localhost:5173"  target = _blank class="hover:text-orange-500 transition font-semibold">Admin Panel</a>
+    </nav>
+  </header>
+  <main class="py-12 max-w-5xl mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-10 text-center">Medium Posts</h1>
+    <div id="medium-posts" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+  </main>
+</body>
+</html> 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects - Data Scientist Portfolio</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+<body class="bg-[#f8fafc] text-[#22223b] font-sans">
+  <!-- Navigation Pane -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm flex items-center justify-between px-8 py-3 mb-8">
+    <div class="flex items-center gap-3">
+      <img src="/static/images/ConfMCO_Logo.png" alt="Profile" class="w-12 h-12 rounded-full object-cover" />
+      <span class="text-xl font-bold tracking-tight">Your Name</span>
+    </div>
+    <nav class="flex items-center gap-8 text-[#22223b] text-sm font-medium">
+      <a href="/public/index.html" class="hover:text-orange-500 transition">Main Page</a>
+      <a href="/public/projects.html" class="hover:text-orange-500 transition">Projects</a>
+      <a href="/public/medium.html" class="hover:text-orange-500 transition">Medium Posts</a>
+      <a href="http://localhost:5173" target = _blank class="hover:text-orange-500 transition font-semibold">Admin Panel</a>
+    </nav>
+  </header>
+  <main class="py-12 max-w-6xl mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-10 text-center">All Projects</h1>
+    <div id="projects-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <script>
+      fetch('/api/projects')
+        .then(r => r.json())
+        .then(projects => {
+          const container = document.getElementById('projects-list');
+          container.innerHTML = '';
+          projects.forEach(project => {
+            const techs = project.tech ? project.tech.split(',').map(t => t.trim()) : [];
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-2xl border border-slate-200 shadow-md p-0 overflow-hidden flex flex-col group';
+            card.innerHTML = `
+              ${project.image ? `<img src="/${project.image}" alt="${project.title} Screenshot" class="w-full h-48 object-cover group-hover:opacity-80 transition" />` : `<div class='w-full h-48 flex items-center justify-center bg-gray-800 text-white text-lg'>Add image here</div>`}
+              <div class="p-5 flex-1 flex flex-col">
+                <h3 class="font-bold text-lg mb-1">${project.title}</h3>
+                <p class="text-slate-500 text-sm mb-2">${project.description}</p>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  ${techs.map(tech => `<span class='bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs'>${tech}</span>`).join('')}
+                </div>
+                <div class="flex gap-2 mt-auto">
+                  <a href="${project.github}" target="_blank" class="flex-1 px-3 py-2 bg-slate-100 text-[#22223b] rounded-lg text-sm font-medium hover:bg-orange-50 transition text-center">View on GitHub</a>
+                  <a href="${project.download}" download class="flex-1 px-3 py-2 bg-slate-100 text-[#22223b] rounded-lg text-sm font-medium hover:bg-orange-50 transition text-center">Download</a>
+                  <a href="${project.readmore}" class="flex-1 px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition text-center">Read More</a>
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        });
+    </script>
+  </main>
+</body>
+</html> 
